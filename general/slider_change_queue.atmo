@@ -1,0 +1,679 @@
+{
+  "header": {
+    "data": {
+      "order": [
+        "Globals",
+        "Interval",
+        "Connected",
+        "Disconnected",
+        "Setup"
+      ],
+      "Globals": {
+        "name": "Globals",
+        "func": "#include \"callbacks.h\"",
+        "code": "\n// A simple delay function\nstatic void delay(int msecs) {\n// delay for msecs milliseconds\n    int i, j;\n    volatile int x;\n    for (i=0; i<msecs; i++) {\n        for (j=0; j<2665; j++) {\n            x++;\n        }\n    }\n}\n",
+        "close": "//END"
+      },
+      "Interval": {
+        "name": "Interval",
+        "func": "\nvoid interval() {",
+        "code": "",
+        "close": "}"
+      },
+      "Connected": {
+        "name": "Connected",
+        "func": "\nvoid connected() {",
+        "code": "",
+        "close": "}"
+      },
+      "Disconnected": {
+        "name": "Disconnected",
+        "func": "\nvoid disconnected() {",
+        "code": "",
+        "close": "}"
+      },
+      "Setup": {
+        "name": "Setup",
+        "func": "\nvoid setup() {",
+        "code": "\tAIR_GPIO_Init();\n\tAIR_POWER_Init();\n\tAIR_UART_Init();\n\tAIR_I2C_Init();\n\tAIR_SPI_Init();\n\tBUZZER_Init();\n\tAIR_POWER_SetMode(AIR_POWER_NOSLEEP);",
+        "close": "}"
+      }
+    },
+    "boardConfiguration": {
+      "ble": {
+        "name": "Bluetooth Low Energy",
+        "file": "ble_config.h",
+        "values": {
+          "localName": {
+            "name": "Local Name",
+            "input": "TextField",
+            "prefix": "#define BLE_LOCAL_NAME \"",
+            "value": "ble_test",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "version": {
+            "name": "Version",
+            "input": "TextField",
+            "prefix": "#define BLE_VERSION \"",
+            "value": "1.00",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pairing": {
+            "name": "Pairing",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "BLE_PAIRING_NONE",
+              "BLE_PAIRING_PASSKEY",
+              "BLE_PAIRING_OOB"
+            ],
+            "value": "BLE_PAIRING_NONE",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPowerLevel": {
+            "name": "TX Power Level (dbm)",
+            "input": "TextField",
+            "prefix": "#define BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^-?[0-9]d{0,2}(.d*)?$"
+          },
+          "intervalFineTimer": {
+            "name": "Interval Timer Length (ms)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_FINE_TIMER ",
+            "value": "1000",
+            "regex": "^[0-9]*$"
+          }
+        }
+      },
+      "power": {
+        "name": "Power Driver",
+        "file": "power_config.h",
+        "values": {
+          "external_osc": {
+            "name": "External Oscillator",
+            "input": "Combo",
+            "prefix": "#define AIR_POWER_",
+            "options": [
+              "EXTERNAL_32KHZ_OSC",
+              "INTERNAL_OSC"
+            ],
+            "value": "INTERNAL_OSC",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "gpio": {
+        "name": "GPIO Driver",
+        "file": "gpio_config.h",
+        "values": {
+          "buad": {
+            "name": "ADC Sample Frequency",
+            "input": "Combo",
+            "prefix": "#define AIR_ADC_SAMPLE_FREQUENCY ",
+            "options": [
+              "ADC_SAMPLE_FREQUENCY_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_HIGH",
+              "ADC_SAMPLE_FREQUENCY_HIGH"
+            ],
+            "value": "ADC_SAMPLE_FREQUENCY_LOW",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "uart": {
+        "name": "AIR UART Driver",
+        "file": "uart_config.h",
+        "values": {
+          "rxBuffer": {
+            "name": "RX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_RX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "txBuffer": {
+            "name": "TX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_TX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "buad": {
+            "name": "Baudrate",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "AIR_UART_BAUD_460800",
+              "AIR_UART_BAUD_230400",
+              "AIR_UART_BAUD_115200",
+              "AIR_UART_BAUD_57600",
+              "AIR_UART_BAUD_38400",
+              "AIR_UART_BAUD_19200",
+              "AIR_UART_BAUD_9600"
+            ],
+            "value": "AIR_UART_BAUD_115200",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPin": {
+            "name": "TX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_TX_PIN ",
+            "options": [
+              "32"
+            ],
+            "value": "32",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rxPin": {
+            "name": "RX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RX_PIN ",
+            "options": [
+              "33"
+            ],
+            "value": "33",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rtsPin": {
+            "name": "RTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RTS_PIN ",
+            "options": [
+              "1"
+            ],
+            "value": "1",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ctsPin": {
+            "name": "CTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_CTS_PIN ",
+            "options": [
+              "3"
+            ],
+            "value": "3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      }
+    },
+    "meta": {
+      "version": "1.2.0",
+      "layoutGrid": true,
+      "layoutSnapping": true,
+      "layoutSnappingSize": 30,
+      "cloudLayoutGrid": false,
+      "cloudLayoutSnapping": false,
+      "cloudLayoutSnappingSize": 10,
+      "language": "en",
+      "enableTooltips": true,
+      "enableAutoSave": true,
+      "enableBuildSave": false,
+      "description": "A sample of handling a slider onChange with some \nqueueing for transport over BLE.",
+      "project_uuid": null,
+      "tokensEnabled": false,
+      "codeAssist": false,
+      "highlightLine": false,
+      "editorTheme": "Default",
+      "editorFontSize": 12,
+      "customEmbeddedElementLibraries": {},
+      "theme": {
+        "bg1": "#DCEBF9",
+        "bg2": "#DCEBF9"
+      },
+      "projectType": "bcm20737",
+      "name": "Slider_change"
+    },
+    "type": "Header",
+    "currentLayoutName": "Default",
+    "currentCloudLayoutName": "Default"
+  },
+  "layouts": {
+    "Default": {
+      "name": "Default (768x1024)",
+      "width": 768,
+      "height": 1024,
+      "orientation": "portrait",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {
+        "Slider": {
+          "x": 7,
+          "y": 37,
+          "width": 106,
+          "height": 346
+        },
+        "Current": {
+          "x": 127,
+          "y": 67,
+          "width": 136,
+          "height": 46
+        },
+        "Queued": {
+          "x": 127,
+          "y": 157,
+          "width": 136,
+          "height": 46
+        },
+        "Label5": {
+          "x": 127,
+          "y": 37,
+          "width": 106,
+          "height": 16
+        },
+        "Label7": {
+          "x": 127,
+          "y": 127,
+          "width": 106,
+          "height": 16
+        },
+        "Label11": {
+          "x": 127,
+          "y": 217,
+          "width": 106,
+          "height": 16
+        },
+        "Sent": {
+          "x": 127,
+          "y": 247,
+          "width": 136,
+          "height": 46
+        },
+        "README": {
+          "x": 337,
+          "y": 37,
+          "width": 256,
+          "height": 346
+        }
+      }
+    }
+  },
+  "cloudLayouts": {
+    "Default": {
+      "name": "Default (768x1024)",
+      "width": 768,
+      "height": 1024,
+      "orientation": "portrait",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {}
+    }
+  },
+  "elements": {
+    "Slider": {
+      "type": "Slider",
+      "properties": {
+        "value": "0",
+        "maxValue": "100",
+        "minValue": "0",
+        "scaleMarkers": [
+          0,
+          50,
+          50
+        ],
+        "scaleStep": "1",
+        "orientation": "Vertical",
+        "enabled": true,
+        "visible": true,
+        "showScale": "True",
+        "showTitle": "True",
+        "elementType": "element"
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "Queued"
+          },
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "Queued"
+          }
+        ],
+        "changed": [
+          {
+            "sourceTrigger": "changed",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "Current"
+          }
+        ]
+      },
+      "zindex": 1,
+      "designer": {
+        "x": 163,
+        "y": 19
+      }
+    },
+    "Current": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "",
+        "enabled": true,
+        "visible": true,
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 3,
+      "designer": {
+        "x": 324,
+        "y": 20
+      }
+    },
+    "Queued": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "",
+        "enabled": true,
+        "visible": true,
+        "elementType": "element"
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "addValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "key": "\"a\"",
+                "value": "value"
+              },
+              "targetOrder": [
+                "key",
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "CompareQueue"
+          },
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "Sent"
+          }
+        ]
+      },
+      "zindex": 4,
+      "designer": {
+        "x": 38,
+        "y": 149
+      }
+    },
+    "Label5": {
+      "type": "Label",
+      "properties": {
+        "label": "Current Value:",
+        "enabled": true,
+        "visible": true,
+        "font": "12px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 5,
+      "designer": {
+        "x": 568,
+        "y": 5
+      }
+    },
+    "Task": {
+      "type": "Task",
+      "properties": {
+        "runOnStart": true,
+        "runIn": "500",
+        "runEvery": "500",
+        "elementType": "element"
+      },
+      "triggers": {
+        "task": [
+          {
+            "sourceTrigger": "task",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "Slider"
+          }
+        ]
+      },
+      "zindex": 6,
+      "designer": {
+        "x": 16,
+        "y": 19
+      }
+    },
+    "Label7": {
+      "type": "Label",
+      "properties": {
+        "label": "Queued Value:",
+        "enabled": true,
+        "visible": true,
+        "font": "12px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 7,
+      "designer": {
+        "x": 568,
+        "y": 73
+      }
+    },
+    "Label11": {
+      "type": "Label",
+      "properties": {
+        "label": "Sent Value:",
+        "enabled": true,
+        "visible": true,
+        "font": "12px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 11,
+      "designer": {
+        "x": 569,
+        "y": 142
+      }
+    },
+    "Sent": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "",
+        "enabled": true,
+        "visible": true,
+        "elementType": "element"
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "addValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "key": "\"b\"",
+                "value": "value"
+              },
+              "targetOrder": [
+                "key",
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "CompareQueue"
+          },
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "Static",
+            "targetValue": "evaluate",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "values": ""
+              },
+              "targetOrder": [
+                "values"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "CompareQueue"
+          }
+        ]
+      },
+      "zindex": 12,
+      "designer": {
+        "x": 197,
+        "y": 320
+      }
+    },
+    "CompareQueue": {
+      "type": "Expression",
+      "properties": {
+        "expression": "values.a == values.b",
+        "elementType": "element"
+      },
+      "triggers": {
+        "expressionFalse": [
+          {
+            "sourceTrigger": "expressionFalse",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "200"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Buzzer14"
+          },
+          {
+            "sourceTrigger": "expressionFalse",
+            "sourceValue": "getValues",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "values.a"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "values"
+              ]
+            },
+            "targetName": "Sent"
+          }
+        ]
+      },
+      "zindex": 13,
+      "designer": {
+        "x": 248,
+        "y": 146
+      }
+    },
+    "Buzzer14": {
+      "type": "Buzzer",
+      "properties": {
+        "code": "\n\tBUZZER_Start(%(note)s);\n    delay(data);\n\tBUZZER_Stop();\n\treturn NULL;\n\t",
+        "note": "BUZZER_Note_F5",
+        "length": "128",
+        "permission": "public",
+        "inputType": "int",
+        "returnType": "json",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 14,
+      "designer": {
+        "x": 439,
+        "y": 108
+      }
+    },
+    "README": {
+      "type": "Label",
+      "properties": {
+        "label": "A task runs every 500 ms and queues the\nslider value to be sent. If the slider value in \nqueue is different from the last sent value, \nit will send, otherwise it will not send.\n\nTo illustrate the behavior, a new value will \ntrigger a beep on the MSDB if the value \nis sent.\n\nIf you move the slider continuously over time\nyou will notice delay occurring more and \nmore, this will be more pronounced on \nAndroid devices vs. iOS devices.",
+        "enabled": true,
+        "visible": true,
+        "font": "12px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 15,
+      "designer": {
+        "x": 452,
+        "y": 252
+      }
+    }
+  },
+  "cloudElements": {}
+}
